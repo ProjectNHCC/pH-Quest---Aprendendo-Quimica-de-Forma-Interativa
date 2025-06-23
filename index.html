@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pH Quest - Aprendendo Química de Forma Interativa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#FF6B6B',
+                        accent: '#4ECDC4',
+                        success: '#45B7D1',
+                        warning: '#FFA726'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .ph-scale { background: linear-gradient(to right, #ff0000, #ff4000, #ff8000, #ffff00, #80ff00, #00ff00, #00ff80, #00ffff, #0080ff, #0000ff, #4000ff, #8000ff, #ff00ff); }
+        .water-pollution { animation: waterFlow 3s ease-in-out infinite; }
+        @keyframes waterFlow { 0%, 100% { opacity: 0.7; } 50% { opacity: 1; } }
+        .game-canvas { border: 3px solid #5D5CDE; border-radius: 12px; }
+        .reagent-card { transition: all 0.3s ease; transform-origin: center; }
+        .reagent-card:hover { transform: scale(1.05); }
+        .quiz-option { transition: all 0.2s ease; }
+        .quiz-option:hover { transform: translateY(-2px); }
+    </style>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">pH</span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-primary">pH Quest</h1>
+                </div>
+                <div class="hidden md:flex space-x-6">
+                    <a href="#intro" class="hover:text-primary transition-colors">Introdução</a>
+                    <a href="#ph-understanding" class="hover:text-primary transition-colors">Entendendo pH</a>
+                    <a href="#concepts" class="hover:text-primary transition-colors">Conceitos</a>
+                    <a href="#game" class="hover:text-primary transition-colors">Jogo</a>
+                    <a href="#exercises" class="hover:text-primary transition-colors">Exercícios</a>
+                    <a href="#applications" class="hover:text-primary transition-colors">Aplicações</a>
+                </div>
+                <button id="menuBtn" class="md:hidden p-2">
+                    <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-300 mb-1"></div>
+                    <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-300 mb-1"></div>
+                    <div class="w-6 h-0.5 bg-gray-600 dark:bg-gray-300"></div>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-white dark:bg-gray-800 shadow-lg">
+        <div class="px-4 py-2 space-y-2">
+            <a href="#intro" class="block py-2 hover:text-primary transition-colors">Introdução</a>
+            <a href="#ph-understanding" class="block py-2 hover:text-primary transition-colors">Entendendo pH</a>
+            <a href="#concepts" class="block py-2 hover:text-primary transition-colors">Conceitos</a>
+            <a href="#game" class="block py-2 hover:text-primary transition-colors">Jogo</a>
+            <a href="#exercises" class="block py-2 hover:text-primary transition-colors">Exercícios</a>
+            <a href="#applications" class="block py-2 hover:text-primary transition-colors">Aplicações</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="intro" class="gradient-bg text-white py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-bold mb-6">Missão: Água Equilibrada</h2>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">Aprenda sobre pH, ácidos e bases através de uma experiência interativa salvando rios poluídos!</p>
+            <a href="#game" class="bg-white text-primary px-8 py-3 rounded-full font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105">Começar Missão</a>
+        </div>
+    </section>
+
+    <!-- Entendendo pH -->
+    <section id="ph-understanding" class="py-16 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Entendendo o pH</h2>
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8 mb-8">
+                    <h3 class="text-2xl font-semibold mb-6">Escala de pH</h3>
+                    <div class="ph-scale h-12 rounded-lg mb-4"></div>
+                    <div class="flex justify-between text-sm font-medium">
+                        <span>0 - Muito Ácido</span>
+                        <span>7 - Neutro</span>
+                        <span>14 - Muito Básico</span>
+                    </div>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-6">
+                    <div class="bg-red-100 dark:bg-red-900 p-6 rounded-lg">
+                        <h4 class="font-semibold text-red-800 dark:text-red-200 mb-3">Ácidos (pH 0-6)</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Limão (pH ~2)</li>
+                            <li>• Vinagre (pH ~3)</li>
+                            <li>• Café (pH ~5)</li>
+                        </ul>
+                    </div>
+                    <div class="bg-green-100 dark:bg-green-900 p-6 rounded-lg">
+                        <h4 class="font-semibold text-green-800 dark:text-green-200 mb-3">Neutro (pH 7)</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Água pura</li>
+                            <li>• Leite</li>
+                            <li>• Sangue humano</li>
+                        </ul>
+                    </div>
+                    <div class="bg-blue-100 dark:bg-blue-900 p-6 rounded-lg">
+                        <h4 class="font-semibold text-blue-800 dark:text-blue-200 mb-3">Bases (pH 8-14)</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Sabão (pH ~9)</li>
+                            <li>• Amônia (pH ~11)</li>
+                            <li>• Água sanitária (pH ~12)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Conceitos -->
+    <section id="concepts" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Ácidos, Bases e Neutralização</h2>
+            <div class="max-w-4xl mx-auto grid md:grid-cols-2 gap-8">
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-4 text-primary">O que são Ácidos?</h3>
+                    <p class="mb-4">Ácidos são substâncias que liberam íons H⁺ quando dissolvidos em água. Eles têm pH menor que 7 e podem ser encontrados em muitos alimentos e produtos do dia a dia.</p>
+                    <div class="bg-red-50 dark:bg-red-900 p-4 rounded-lg">
+                        <strong>Características:</strong>
+                        <ul class="mt-2 space-y-1">
+                            <li>• Sabor azedo</li>
+                            <li>• Conduzem eletricidade</li>
+                            <li>• Reagem com metais</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+                    <h3 class="text-2xl font-semibold mb-4 text-primary">O que são Bases?</h3>
+                    <p class="mb-4">Bases são substâncias que liberam íons OH⁻ ou capturam íons H⁺ quando dissolvidas em água. Elas têm pH maior que 7 e são usadas em produtos de limpeza.</p>
+                    <div class="bg-blue-50 dark:bg-blue-900 p-4 rounded-lg">
+                        <strong>Características:</strong>
+                        <ul class="mt-2 space-y-1">
+                            <li>• Sabor amargo</li>
+                            <li>• Sensação escorregadia</li>
+                            <li>• Conduzem eletricidade</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="max-w-2xl mx-auto mt-8 bg-accent text-white rounded-lg p-8 text-center">
+                <h3 class="text-2xl font-semibold mb-4">Neutralização</h3>
+                <p class="text-lg">Quando um ácido reage com uma base, eles se neutralizam, formando água e sal. Este processo é essencial para manter o equilíbrio do pH em ambientes aquáticos!</p>
+                <div class="mt-4 text-2xl font-mono">Ácido + Base → Água + Sal</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Jogo Interativo -->
+    <section id="game" class="py-16 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">🎮 Missão: Água Equilibrada</h2>
+            
+            <!-- Game HUD -->
+            <div class="max-w-6xl mx-auto bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6 mb-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div class="bg-primary text-white rounded-lg p-4">
+                        <div class="text-2xl font-bold" id="gameScore">0</div>
+                        <div class="text-sm">Pontuação</div>
+                    </div>
+                    <div class="bg-success text-white rounded-lg p-4">
+                        <div class="text-2xl font-bold" id="gameLevel">1</div>
+                        <div class="text-sm">Nível</div>
+                    </div>
+                    <div class="bg-warning text-white rounded-lg p-4">
+                        <div class="text-2xl font-bold" id="gameReagents">5</div>
+                        <div class="text-sm">Reagentes</div>
+                    </div>
+                    <div class="bg-secondary text-white rounded-lg p-4">
+                        <div class="text-2xl font-bold" id="gameTime">300</div>
+                        <div class="text-sm">Tempo (s)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Area -->
+            <div class="max-w-6xl mx-auto bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                <div class="grid lg:grid-cols-3 gap-6">
+                    <!-- Game Canvas -->
+                    <div class="lg:col-span-2">
+                        <h3 class="text-xl font-semibold mb-4">Rio Poluído - Clique nos pontos vermelhos para medir pH</h3>
+                        <canvas id="gameCanvas" class="game-canvas w-full h-64 md:h-80 bg-blue-100"></canvas>
+                        
+                        <!-- pH Meter -->
+                        <div class="mt-4 bg-gray-100 dark:bg-gray-600 rounded-lg p-4">
+                            <h4 class="font-semibold mb-2">Medidor de pH</h4>
+                            <div class="flex items-center space-x-4">
+                                <div class="ph-scale h-6 flex-1 rounded"></div>
+                                <div class="text-2xl font-bold" id="phReading">7.0</div>
+                            </div>
+                            <div id="phStatus" class="mt-2 text-sm font-medium">Clique em um ponto para medir</div>
+                        </div>
+                    </div>
+
+                    <!-- Reagents Panel -->
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Reagentes Disponíveis</h3>
+                        <div class="space-y-3">
+                            <div class="reagent-card bg-red-100 dark:bg-red-900 p-4 rounded-lg cursor-pointer" data-type="acid" data-strength="1">
+                                <h4 class="font-semibold text-red-800 dark:text-red-200">Ácido Fraco</h4>
+                                <p class="text-sm">pH -1.0</p>
+                                <div class="text-xs mt-1">Para poluição básica leve</div>
+                            </div>
+                            
+                            <div class="reagent-card bg-red-200 dark:bg-red-800 p-4 rounded-lg cursor-pointer" data-type="acid" data-strength="2">
+                                <h4 class="font-semibold text-red-800 dark:text-red-200">Ácido Forte</h4>
+                                <p class="text-sm">pH -2.0</p>
+                                <div class="text-xs mt-1">Para poluição básica intensa</div>
+                            </div>
+                            
+                            <div class="reagent-card bg-blue-100 dark:bg-blue-900 p-4 rounded-lg cursor-pointer" data-type="base" data-strength="1">
+                                <h4 class="font-semibold text-blue-800 dark:text-blue-200">Base Fraca</h4>
+                                <p class="text-sm">pH +1.0</p>
+                                <div class="text-xs mt-1">Para poluição ácida leve</div>
+                            </div>
+                            
+                            <div class="reagent-card bg-blue-200 dark:bg-blue-800 p-4 rounded-lg cursor-pointer" data-type="base" data-strength="2">
+                                <h4 class="font-semibold text-blue-800 dark:text-blue-200">Base Forte</h4>
+                                <p class="text-sm">pH +2.0</p>
+                                <div class="text-xs mt-1">Para poluição ácida intensa</div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 text-center">
+                            <button id="nextLevel" class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-opacity-90 transition-all" disabled>Próximo Nível</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Instructions -->
+                <div class="mt-6 bg-yellow-50 dark:bg-yellow-900 border-l-4 border-yellow-400 p-4">
+                    <h4 class="font-semibold text-yellow-800 dark:text-yellow-200">Como Jogar:</h4>
+                    <ol class="mt-2 text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+                        <li>1. Clique nos pontos vermelhos do rio para medir o pH</li>
+                        <li>2. Escolha o reagente adequado (ácido para neutralizar bases, base para neutralizar ácidos)</li>
+                        <li>3. Clique no reagente e depois no ponto poluído para aplicar</li>
+                        <li>4. Objetivo: pH entre 6.5 e 8.5 (faixa saudável para peixes)</li>
+                        <li>5. Complete todos os pontos para avançar de nível!</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Exercícios -->
+    <section id="exercises" class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">📚 Exercícios de Fixação</h2>
+            
+            <div class="max-w-4xl mx-auto space-y-8">
+                <!-- Quiz 1 -->
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+                    <h3 class="text-xl font-semibold mb-6">1. Qual é o pH de uma solução neutra?</h3>
+                    <div class="space-y-3">
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            A) pH = 0
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="true">
+                            B) pH = 7
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            C) pH = 14
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            D) pH = 10
+                        </div>
+                    </div>
+                    <div class="quiz-feedback mt-4 hidden"></div>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+                    <h3 class="text-xl font-semibold mb-6">2. Para neutralizar um rio com pH = 4 (ácido), você deve usar:</h3>
+                    <div class="space-y-3">
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            A) Mais ácido
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="true">
+                            B) Uma base
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            C) Água pura
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            D) Sal
+                        </div>
+                    </div>
+                    <div class="quiz-feedback mt-4 hidden"></div>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-8">
+                    <h3 class="text-xl font-semibold mb-6">3. Qual é a faixa de pH ideal para a vida aquática?</h3>
+                    <div class="space-y-3">
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            A) 0 - 3
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            B) 4 - 6
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="true">
+                            C) 6.5 - 8.5
+                        </div>
+                        <div class="quiz-option bg-gray-100 dark:bg-gray-600 p-4 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-500" data-answer="false">
+                            D) 10 - 14
+                        </div>
+                    </div>
+                    <div class="quiz-feedback mt-4 hidden"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Aplicações Reais -->
+    <section id="applications" class="py-16 bg-gray-50 dark:bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">🌍 Aplicações Reais</h2>
+            
+            <div class="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                    <div class="text-4xl mb-4">🏭</div>
+                    <h3 class="text-xl font-semibold mb-4">Tratamento de Água</h3>
+                    <p>Estações de tratamento usam cal (base) para neutralizar águas ácidas e ácido para reduzir a basicidade, garantindo água potável segura.</p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                    <div class="text-4xl mb-4">🌱</div>
+                    <h3 class="text-xl font-semibold mb-4">Agricultura</h3>
+                    <p>Agricultores testam e ajustam o pH do solo usando calcário (base) ou enxofre (ácido) para otimizar o crescimento das plantas.</p>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-700 rounded-lg shadow-lg p-6">
+                    <div class="text-4xl mb-4">🧴</div>
+                    <h3 class="text-xl font-semibold mb-4">Produtos do Cotidiano</h3>
+                    <p>Antiácidos neutralizam o excesso de ácido no estômago, e produtos de limpeza usam bases para remover gorduras ácidas.</p>
+                </div>
+            </div>
+            
+            <div class="max-w-4xl mx-auto mt-12 bg-green-100 dark:bg-green-900 rounded-lg p-8">
+                <h3 class="text-2xl font-semibold mb-4 text-green-800 dark:text-green-200">💡 Curiosidade Ambiental</h3>
+                <p class="text-green-700 dark:text-green-300">A chuva ácida, causada por poluição industrial, pode baixar o pH de lagos para 3-4, matando peixes e plantas. A neutralização com calcário é uma técnica real usada para recuperar ecossistemas aquáticos!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">pH Quest</h3>
+                    <p class="text-gray-300">Aprendendo química através da gamificação educacional.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Recursos</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors">Simuladores Online</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Vídeo Aulas</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Material Didático</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Suporte</h4>
+                    <ul class="space-y-2 text-gray-300">
+                        <li><a href="#" class="hover:text-white transition-colors">Guia do Professor</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">FAQ</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Contato</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4">Referências</h4>
+                    <ul class="space-y-2 text-gray-300 text-sm">
+                        <li>BNCC - Base Nacional Comum Curricular</li>
+                        <li>Livro: Química Geral - Russel</li>
+                        <li>EPA - Environmental Protection Agency</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-300">
+                <p>&copy; 2024 pH Quest. Desenvolvido para fins educacionais.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode detection
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Mobile menu toggle
+        document.getElementById('menuBtn').addEventListener('click', () => {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Game Logic
+        class PHGame {
+            constructor() {
+                this.canvas = document.getElementById('gameCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.canvas.width = this.canvas.offsetWidth;
+                this.canvas.height = this.canvas.offsetHeight;
+                
+                this.score = 0;
+                this.level = 1;
+                this.reagents = 5;
+                this.timeLeft = 300;
+                this.selectedReagent = null;
+                this.selectedPoint = null;
+                
+                this.pollutionPoints = [
+                    { x: 100, y: 150, ph: 4.2, treated: false, id: 1 },
+                    { x: 200, y: 180, ph: 9.1, treated: false, id: 2 },
+                    { x: 350, y: 120, ph: 3.8, treated: false, id: 3 },
+                    { x: 450, y: 160, ph: 10.5, treated: false, id: 4 }
+                ];
+                
+                this.init();
+            }
+            
+            init() {
+                this.bindEvents();
+                this.startTimer();
+                this.draw();
+                this.updateHUD();
+            }
+            
+            bindEvents() {
+                this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+                
+                document.querySelectorAll('.reagent-card').forEach(card => {
+                    card.addEventListener('click', () => this.selectReagent(card));
+                });
+                
+                document.getElementById('nextLevel').addEventListener('click', () => this.nextLevel());
+            }
+            
+            handleCanvasClick(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                const x = (e.clientX - rect.left) * (this.canvas.width / rect.width);
+                const y = (e.clientY - rect.top) * (this.canvas.height / rect.height);
+                
+                for (let point of this.pollutionPoints) {
+                    const distance = Math.sqrt((x - point.x) ** 2 + (y - point.y) ** 2);
+                    if (distance < 25) {
+                        if (this.selectedReagent && !point.treated) {
+                            this.treatPollution(point);
+                        } else {
+                            this.measurePH(point);
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            measurePH(point) {
+                this.selectedPoint = point;
+                document.getElementById('phReading').textContent = point.ph.toFixed(1);
+                
+                let status = '';
+                let color = '';
+                if (point.ph < 6.5) {
+                    status = 'Ácido - Use uma base para neutralizar';
+                    color = 'text-red-600';
+                } else if (point.ph > 8.5) {
+                    status = 'Básico - Use um ácido para neutralizar';
+                    color = 'text-blue-600';
+                } else {
+                    status = 'pH saudável! ✅';
+                    color = 'text-green-600';
+                }
+                
+                const statusEl = document.getElementById('phStatus');
+                statusEl.textContent = status;
+                statusEl.className = `mt-2 text-sm font-medium ${color}`;
+                
+                this.draw();
+            }
+            
+            selectReagent(card) {
+                document.querySelectorAll('.reagent-card').forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+                card.classList.add('ring-2', 'ring-primary');
+                
+                this.selectedReagent = {
+                    type: card.dataset.type,
+                    strength: parseInt(card.dataset.strength)
+                };
+            }
+            
+            treatPollution(point) {
+                if (this.reagents <= 0) {
+                    alert('Reagentes esgotados! Complete o nível para continuar.');
+                    return;
+                }
+                
+                const reagent = this.selectedReagent;
+                let phChange = 0;
+                
+                if (reagent.type === 'acid') {
+                    phChange = -reagent.strength;
+                } else {
+                    phChange = reagent.strength;
+                }
+                
+                point.ph += phChange;
+                point.ph = Math.max(0, Math.min(14, point.ph));
+                
+                this.reagents--;
+                
+                // Calcular pontuação
+                const targetPH = 7.0;
+                const distance = Math.abs(point.ph - targetPH);
+                let points = 0;
+                
+                if (point.ph >= 6.5 && point.ph <= 8.5) {
+                    points = 100 - Math.floor(distance * 20);
+                    point.treated = true;
+                    this.showFeedback('Excelente! pH equilibrado! ✅', 'text-green-600');
+                } else {
+                    points = Math.max(0, 50 - Math.floor(distance * 10));
+                    this.showFeedback('Continue tentando ajustar o pH...', 'text-yellow-600');
+                }
+                
+                this.score += Math.max(0, points);
+                this.measurePH(point);
+                this.updateHUD();
+                this.checkLevelComplete();
+                
+                // Reset reagent selection
+                document.querySelectorAll('.reagent-card').forEach(c => c.classList.remove('ring-2', 'ring-primary'));
+                this.selectedReagent = null;
+            }
+            
+            showFeedback(message, className) {
+                const feedback = document.createElement('div');
+                feedback.textContent = message;
+                feedback.className = `fixed top-20 left-1/2 transform -translate-x-1/2 bg-white dark:bg-gray-800 px-6 py-3 rounded-lg shadow-lg z-50 ${className}`;
+                document.body.appendChild(feedback);
+                
+                setTimeout(() => {
+                    feedback.remove();
+                }, 3000);
+            }
+            
+            checkLevelComplete() {
+                const allTreated = this.pollutionPoints.every(point => point.treated);
+                if (allTreated) {
+                    document.getElementById('nextLevel').disabled = false;
+                    this.showFeedback('Nível completo! Todos os pontos estão equilibrados! 🎉', 'text-green-600');
+                }
+            }
+            
+            nextLevel() {
+                this.level++;
+                this.reagents = 5 + this.level;
+                this.timeLeft = 300;
+                
+                // Generate new pollution points
+                this.pollutionPoints = [];
+                for (let i = 0; i < 3 + this.level; i++) {
+                    this.pollutionPoints.push({
+                        x: 80 + (i * 100) + Math.random() * 50,
+                        y: 100 + Math.random() * 100,
+                        ph: Math.random() < 0.5 ? 2 + Math.random() * 4 : 9 + Math.random() * 4,
+                        treated: false,
+                        id: i + 1
+                    });
+                }
+                
+                document.getElementById('nextLevel').disabled = true;
+                this.updateHUD();
+                this.draw();
+                this.showFeedback(`Nível ${this.level} iniciado!`, 'text-blue-600');
+            }
+            
+            startTimer() {
+                setInterval(() => {
+                    if (this.timeLeft > 0) {
+                        this.timeLeft--;
+                        this.updateHUD();
+                    } else {
+                        this.showFeedback('Tempo esgotado! Reiniciando nível...', 'text-red-600');
+                        this.timeLeft = 300;
+                        this.reagents = 5 + this.level;
+                        this.pollutionPoints.forEach(point => {
+                            point.treated = false;
+                            point.ph = Math.random() < 0.5 ? 2 + Math.random() * 4 : 9 + Math.random() * 4;
+                        });
+                        this.updateHUD();
+                        this.draw();
+                    }
+                }, 1000);
+            }
+            
+            updateHUD() {
+                document.getElementById('gameScore').textContent = this.score;
+                document.getElementById('gameLevel').textContent = this.level;
+                document.getElementById('gameReagents').textContent = this.reagents;
+                document.getElementById('gameTime').textContent = this.timeLeft;
+            }
+            
+            draw() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw river background
+                const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, 0);
+                gradient.addColorStop(0, '#87CEEB');
+                gradient.addColorStop(1, '#4682B4');
+                this.ctx.fillStyle = gradient;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+                
+                // Draw river flow lines
+                this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+                this.ctx.lineWidth = 2;
+                for (let i = 0; i < 5; i++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(0, 50 + i * 40);
+                    this.ctx.lineTo(this.canvas.width, 60 + i * 40);
+                    this.ctx.stroke();
+                }
+                
+                // Draw pollution points
+                this.pollutionPoints.forEach(point => {
+                    if (point.treated) {
+                        this.ctx.fillStyle = '#22C55E';
+                        this.ctx.shadowColor = '#22C55E';
+                    } else {
+                        this.ctx.fillStyle = '#EF4444';
+                        this.ctx.shadowColor = '#EF4444';
+                    }
+                    
+                    this.ctx.shadowBlur = 10;
+                    this.ctx.beginPath();
+                    this.ctx.arc(point.x, point.y, 15, 0, 2 * Math.PI);
+                    this.ctx.fill();
+                    this.ctx.shadowBlur = 0;
+                    
+                    // Draw point ID
+                    this.ctx.fillStyle = '#FFFFFF';
+                    this.ctx.font = 'bold 12px Inter';
+                    this.ctx.textAlign = 'center';
+                    this.ctx.fillText(point.id.toString(), point.x, point.y + 4);
+                    
+                    // Highlight selected point
+                    if (this.selectedPoint && this.selectedPoint.id === point.id) {
+                        this.ctx.strokeStyle = '#FFFFFF';
+                        this.ctx.lineWidth = 3;
+                        this.ctx.beginPath();
+                        this.ctx.arc(point.x, point.y, 20, 0, 2 * Math.PI);
+                        this.ctx.stroke();
+                    }
+                });
+            }
+        }
+        
+        // Quiz Logic
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.closest('.bg-white, .dark\\:bg-gray-700');
+                const options = parent.querySelectorAll('.quiz-option');
+                const feedback = parent.querySelector('.quiz-feedback');
+                
+                options.forEach(opt => {
+                    opt.classList.remove('bg-green-200', 'bg-red-200', 'dark:bg-green-800', 'dark:bg-red-800');
+                    opt.style.pointerEvents = 'none';
+                });
+                
+                const isCorrect = this.dataset.answer === 'true';
+                
+                if (isCorrect) {
+                    this.classList.add('bg-green-200', 'dark:bg-green-800');
+                    feedback.textContent = '✅ Correto! Excelente conhecimento!';
+                    feedback.className = 'quiz-feedback mt-4 text-green-600 font-medium';
+                } else {
+                    this.classList.add('bg-red-200', 'dark:bg-red-800');
+                    const correctOption = parent.querySelector('[data-answer="true"]');
+                    correctOption.classList.add('bg-green-200', 'dark:bg-green-800');
+                    feedback.textContent = '❌ Incorreto. Estude mais sobre este conceito!';
+                    feedback.className = 'quiz-feedback mt-4 text-red-600 font-medium';
+                }
+                
+                feedback.classList.remove('hidden');
+            });
+        });
+        
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const game = new PHGame();
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Close mobile menu if open
+                    document.getElementById('mobileMenu').classList.add('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
